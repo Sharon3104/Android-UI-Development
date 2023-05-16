@@ -1,0 +1,980 @@
+1)Create an application to take input number from user and print its reverse
+number in TextView without button. 
+KOTLIN
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var inputEditText: EditText
+    private lateinit var reverseTextView: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        inputEditText = findViewById(R.id.input_edit_text)
+        reverseTextView = findViewById(R.id.reverse_text_view)
+
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val inputString = inputEditText.text.toString()
+                val reverseString = inputString.reversed()
+                reverseTextView.text = reverseString
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                
+            }
+        })
+    }
+}
+XML
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/input_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter a number" />
+
+    <TextView
+        android:id="@+id/reverse_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_edit_text"
+        android:text="" />
+
+</RelativeLayout>
+
+2)Create an application to input 2 numbers from user and all numbers
+between those 2 numbers in next activity.
+kotlin
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var num1EditText: EditText
+    private lateinit var num2EditText: EditText
+    private lateinit var submitButton: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        num1EditText = findViewById(R.id.num1_edit_text)
+        num2EditText = findViewById(R.id.num2_edit_text)
+        submitButton = findViewById(R.id.submit_button)
+
+        submitButton.setOnClickListener {
+            val num1 = num1EditText.text.toString().toInt()
+            val num2 = num2EditText.text.toString().toInt()
+
+            val intent = Intent(this, NumbersActivity::class.java)
+            intent.putExtra("num1", num1)
+            intent.putExtra("num2", num2)
+            startActivity(intent)
+        }
+    }
+}
+XML
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/num1_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter first number" />
+
+    <EditText
+        android:id="@+id/num2_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter second number" />
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+
+</LinearLayout>
+KOTLIN
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.TextView
+
+class NumbersActivity : AppCompatActivity() {
+    private lateinit var numbersTextView: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_numbers)
+
+        numbersTextView = findViewById(R.id.numbers_text_view)
+
+        val num1 = intent.getIntExtra("num1", 0)
+        val num2 = intent.getIntExtra("num2", 0)
+
+        var numbers = ""
+        for (i in num1..num2) {
+            numbers += "$i "
+        }
+        numbersTextView.text = numbers
+    }
+}
+XML
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/numbers_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+</LinearLayout>
+3)Create an application with radio buttons (Add, Subtraction, Multiply,
+Division) EditText (number1, number2) and print result as per user choice
+from radio button in TextView
+kotlin
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.*
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var num1EditText: EditText
+    private lateinit var num2EditText: EditText
+    private lateinit var addButton: RadioButton
+    private lateinit var subButton: RadioButton
+    private lateinit var multiplyButton: RadioButton
+    private lateinit var divideButton: RadioButton
+    private lateinit var calculateButton: Button
+    private lateinit var resultTextView: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        num1EditText = findViewById(R.id.num1_edit_text)
+        num2EditText = findViewById(R.id.num2_edit_text)
+        addButton = findViewById(R.id.add_radio_button)
+        subButton = findViewById(R.id.sub_radio_button)
+        multiplyButton = findViewById(R.id.multiply_radio_button)
+        divideButton = findViewById(R.id.divide_radio_button)
+        calculateButton = findViewById(R.id.calculate_button)
+        resultTextView = findViewById(R.id.result_text_view)
+
+        calculateButton.setOnClickListener {
+            val num1 = num1EditText.text.toString().toDouble()
+            val num2 = num2EditText.text.toString().toDouble()
+
+            var result = 0.0
+            when {
+                addButton.isChecked -> result = num1 + num2
+                subButton.isChecked -> result = num1 - num2
+                multiplyButton.isChecked -> result = num1 * num2
+                divideButton.isChecked -> {
+                    if (num2 != 0.0) {
+                        result = num1 / num2
+                    } else {
+                        Toast.makeText(this, "Cannot divide by zero", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            resultTextView.text = "Result: $result"
+        }
+    }
+}
+XML
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/num1_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter first number"/>
+
+    <EditText
+        android:id="@+id/num2_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Enter second number"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/add_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"/>
+
+        <RadioButton
+            android:id="@+id/sub_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtract"/>
+
+        <RadioButton
+            android:id="@+id/multiply_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Multiply"/>
+
+        <RadioButton
+            android:id="@+id/divide_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Divide"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/calculate_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calculate"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/result_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"/>
+
+</LinearLayout>
+4)Write a code to display login form when click on login button and
+registration form when click on registration button on single activity using
+fragment 
+kotlin
+class RegistrationFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_registration, container, false)
+    }
+
+}
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Initially show the login fragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, LoginFragment())
+            .commit()
+
+        // Set up the login button to show the login fragment
+        login_button.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, LoginFragment())
+                .commit()
+        }
+
+        // Set up the registration button to show the registration fragment
+        registration_button.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, RegistrationFragment())
+                .commit()
+        }
+    }
+}
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Login" />
+
+        <Button
+            android:id="@+id/registration_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Registration" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
+5)Create an application to load google url into webview also manage forward
+and backward redirect
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var webView: WebView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        webView = findViewById(R.id.webView)
+
+        // Enable JavaScript in the WebView
+        val webSettings = webView.settings
+        webSettings.javaScriptEnabled = true
+
+        // Load Google URL
+        webView.loadUrl("https://www.google.com/")
+
+        // Set up WebView client to handle page redirects
+        webView.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                view?.loadUrl(url)
+                return true
+            }
+
+        }
+    }
+
+    // Handle back button press
+    override fun onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+}
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
+6)In Previous Practical write code to check weather internet connection is
+available or not if no internet connection then display message accordingly 
+kotlin
+private fun isNetworkAvailable(): Boolean {
+    val connectivityManager =
+        getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetworkInfo = connectivityManager.activeNetworkInfo
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected
+}
+
+if (isNetworkAvailable()) {
+    // Internet connection is available, do something
+} else {
+    // Internet connection is not available, display message
+    Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+}
+7)create an application to hide TextView when first button click and show
+when second button click
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!" />
+
+    <Button
+        android:id="@+id/button_hide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hide" />
+
+    <Button
+        android:id="@+id/button_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show" />
+
+</LinearLayout>
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var textView: TextView
+    private lateinit var buttonHide: Button
+    private lateinit var buttonShow: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        textView = findViewById(R.id.textView)
+        buttonHide = findViewById(R.id.button_hide)
+        buttonShow = findViewById(R.id.button_show)
+
+        // Hide the TextView when the "Hide" button is clicked
+        buttonHide.setOnClickListener {
+            textView.visibility = View.GONE
+        }
+
+        // Show the TextView when the "Show" button is clicked
+        buttonShow.setOnClickListener {
+            textView.visibility = View.VISIBLE
+        }
+    }
+}
+8)Create an application to add TextView in TableLayout Programmatically
+xml
+<TableLayout
+    android:id="@+id/tableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var tableLayout: TableLayout
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        tableLayout = findViewById(R.id.tableLayout)
+
+        // Create a new row and add two TextViews to it
+        val row = TableRow(this)
+        val textView1 = TextView(this)
+        textView1.text = "Hello"
+        val textView2 = TextView(this)
+        textView2.text = "World"
+        row.addView(textView1)
+        row.addView(textView2)
+
+        // Add the row to the table
+        tableLayout.addView(row)
+    }
+}
+9)create an application to open pdf using implicit intent
+kotlin
+val pdfFile = File("path_to_your_pdf_file")
+val pdfUri = Uri.fromFile(pdfFile)
+
+val intent = Intent(Intent.ACTION_VIEW)
+intent.setDataAndType(pdfUri, "application/pdf")
+intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+try {
+    startActivity(intent)
+} catch (e: ActivityNotFoundException) {
+    // If no PDF viewer is installed, display a toast or alert dialog
+    Toast.makeText(this, "No PDF viewer found", Toast.LENGTH_SHORT).show()
+}
+10)create an application to increate font size when plus button click and
+decrease when minus button click
+xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/btnMinus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Hello World" />
+
+    <Button
+        android:id="@+id/btnPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+" />
+
+</LinearLayout>
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var tvText: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        tvText = findViewById(R.id.tvText)
+
+        findViewById<Button>(R.id.btnMinus).setOnClickListener {
+            // Decrease font size by 2 sp
+            tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, tvText.textSize - 2)
+        }
+
+        findViewById<Button>(R.id.btnPlus).setOnClickListener {
+            // Increase font size by 2 sp
+            tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, tvText.textSize + 2)
+        }
+    }
+}
+11)create an application to display n edittext where n is number input by user
+xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number of EditText views" />
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create EditText views" />
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+</LinearLayout>
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var llContainer: LinearLayout
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val etCount = findViewById<EditText>(R.id.etCount)
+        val btnCreate = findViewById<Button>(R.id.btnCreate)
+        llContainer = findViewById(R.id.llContainer)
+
+        btnCreate.setOnClickListener {
+            // Clear the container first
+            llContainer.removeAllViews()
+
+            // Get the number of EditText views to create
+            val count = etCount.text.toString().toIntOrNull()
+
+            if (count != null && count > 0) {
+                // Create and add the EditText views to the container
+                repeat(count) {
+                    val editText = EditText(this)
+                    editText.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    llContainer.addView(editText)
+                }
+            } else {
+                // Show an error message if the count is invalid
+                Toast.makeText(this, "Invalid count", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
+12)Create an application to display Textview when checkbox is checked and
+hide otherwise A6 Write a program to show four images around Textview.
+xml
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is a TextView"
+        android:layout_centerInParent="true"/>
+
+    <ImageView
+        android:id="@+id/image_view_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_above="@id/text_view"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/image_view_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_toLeftOf="@id/text_view"
+        android:layout_centerVertical="true"/>
+
+    <ImageView
+        android:id="@+id/image_view_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_toRightOf="@id/text_view"
+        android:layout_centerVertical="true"/>
+
+    <ImageView
+        android:id="@+id/image_view_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_below="@id/text_view"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
+kotlin
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var textView: TextView
+    private lateinit var checkBox: CheckBox
+    private lateinit var imageViewTop: ImageView
+    private lateinit var imageViewLeft: ImageView
+    private lateinit var imageViewRight: ImageView
+    private lateinit var imageViewBottom: ImageView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        textView = findViewById(R.id.text_view)
+        checkBox = findViewById(R.id.checkbox)
+        imageViewTop = findViewById(R.id.image_view_top)
+        imageViewLeft = findViewById(R.id.image_view_left)
+        imageViewRight = findViewById(R.id.image_view_right)
+        imageViewBottom = findViewById(R.id.image_view_bottom)
+
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                textView.visibility = TextView.VISIBLE
+                imageViewTop.visibility = ImageView.VISIBLE
+                imageViewLeft.visibility = ImageView.VISIBLE
+                imageViewRight.visibility = ImageView.VISIBLE
+                imageViewBottom.visibility = ImageView.VISIBLE
+            } else {
+                textView.visibility = TextView.INVISIBLE
+                imageViewTop.visibility = ImageView.INVISIBLE
+                imageViewLeft.visibility = ImageView.INVISIBLE
+                imageViewRight.visibility = ImageView.INVISIBLE
+                imageViewBottom.visibility = ImageView.INVISIBLE
+            }
+        }
+    }
+}
+13)Write a program to create one string array in string.xml file and that array
+show in listview
+xml
+<string-array name="fruits_array">
+    <item>Apple</item>
+    <item>Banana</item>
+    <item>Cherry</item>
+    <item>Dates</item>
+    <item>Orange</item>
+    <item>Pineapple</item>
+    <item>Strawberry</item>
+</string-array>
+xml
+<ListView
+    android:id="@+id/fruits_listview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var fruitsListView: ListView
+    private lateinit var fruitsArray: Array<String>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        fruitsListView = findViewById(R.id.fruits_listview)
+        fruitsArray = resources.getStringArray(R.array.fruits_array)
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, fruitsArray)
+        fruitsListView.adapter = adapter
+    }
+}
+14)Write a program in android display screen color which the Color will be
+select from the radio button. 
+xml
+<RadioGroup
+    android:id="@+id/color_radio_group"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioButton
+        android:id="@+id/red_radio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Red"/>
+
+    <RadioButton
+        android:id="@+id/blue_radio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Blue"/>
+
+    <RadioButton
+        android:id="@+id/green_radio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Green"/>
+
+    <RadioButton
+        android:id="@+id/yellow_radio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yellow"/>
+
+</RadioGroup>
+<Button
+    android:id="@+id/apply_color_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Apply"/>
+
+<View
+    android:id="@+id/color_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+kotlin
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var colorRadioGroup: RadioGroup
+    private lateinit var applyColorButton: Button
+    private lateinit var colorView: View
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        colorRadioGroup = findViewById(R.id.color_radio_group)
+        applyColorButton = findViewById(R.id.apply_color_button)
+        colorView = findViewById(R.id.color_view)
+	applyColorButton.setOnClickListener {
+    val selectedColor = when (colorRadioGroup.checkedRadioButtonId) {
+        R.id.red_radio_button -> Color.RED
+        R.id.blue_radio_button -> Color.BLUE
+        R.id.green_radio_button -> Color.GREEN
+        R.id.yellow_radio_button -> Color.YELLOW
+        else -> Color.WHITE
+    }
+    colorView.setBackgroundColor(selectedColor)
+}
+
+    }
+}
+15)Write a program you have taken three seek bar controls. From three Seekbar
+which Seek bar value changed the background color of device will be
+changed. 
+kotlin
+import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.SeekBar
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var redSeekBar: SeekBar
+    private lateinit var greenSeekBar: SeekBar
+    private lateinit var blueSeekBar: SeekBar
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        redSeekBar = findViewById(R.id.red_seek_bar)
+        greenSeekBar = findViewById(R.id.green_seek_bar)
+        blueSeekBar = findViewById(R.id.blue_seek_bar)
+
+        redSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                setBackgroundColor()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        greenSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                setBackgroundColor()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        blueSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                setBackgroundColor()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+    }
+
+    private fun setBackgroundColor() {
+        val red = redSeekBar.progress
+        val green = greenSeekBar.progress
+        val blue = blueSeekBar.progress
+        val color = Color.rgb(red, green, blue)
+        window.decorView.setBackgroundColor(color)
+    }
+}
+
+16)Create toolbar with spinner and search functionality 
+xml
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/spinner"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.Spinner"
+        android:title="Spinner" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.widget.SearchView"
+        android:title="Search"/>
+
+</menu>
+kotlin
+import android.os.Bundle
+import android.view.Menu
+import android.widget.ArrayAdapter
+import android.widget.SearchView
+import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Find the toolbar view and set it as the ActionBar
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.spinner_items,
+            android.R.layout.simple_spinner_item
+        )
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Get the spinner view from the toolbar
+        val spinner = toolbar.menu.findItem(R.id.spinner).actionView as Spinner
+
+        // Attach the adapter to the spinner
+        spinner.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu to add items to the toolbar
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+
+        // Get the search view from the toolbar
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
+
+        // Set a listener for the search view
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Perform search here
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Filter results here
+                return true
+            }
+        })
+
+        return true
+    }
+}
